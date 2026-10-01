@@ -1,0 +1,97 @@
+{
+  "timestamp": "2026-09-26T00:19:53.440Z",
+  "farmer": {
+    "email": "farmer_postman_1790381992796@agrimed.com",
+    "name": "Tunde Adebayo",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4NDFkYWZiLTZmNDItNDYxYy05NWE5LWUxNzBkNTYwOTg0NSIsImVtYWlsIjoiZmFybWVyX3Bvc3RtYW5fMTc5MDM4MTk5Mjc5NkBhZ3JpbWVkLmNvbSIsInJvbGUiOiJmYXJtZXIiLCJpYXQiOjE3OTAzODE5OTMsImV4cCI6MTc5MDM4Mjg5M30.ynS7TMe6LvKM3g1Mr6Vxd5T0sGSxUa5cVIY9CaNXiGc"
+  },
+  "addCrop": {
+    "method": "POST",
+    "url": "http://localhost:3000/api/crops",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4NDFkYWZiLTZmNDItNDYxYy05NWE5LWUxNzBkNTYwOTg0NSIsImVtYWlsIjoiZmFybWVyX3Bvc3RtYW5fMTc5MDM4MTk5Mjc5NkBhZ3JpbWVkLmNvbSIsInJvbGUiOiJmYXJtZXIiLCJpYXQiOjE3OTAzODE5OTMsImV4cCI6MTc5MDM4Mjg5M30.ynS7TMe6LvKM3g1Mr6Vxd5T0sGSxUa5cVIY9CaNXiGc"
+    },
+    "requestBody": {
+      "name": "Fresh Organic Hibiscus (Zobo)",
+      "category": "Medicinal",
+      "price": 25.5,
+      "quantity": 120,
+      "unit": "kg",
+      "description": "Sun-dried high-grade organic hibiscus calyces, rich in antioxidants.",
+      "imageUrl": "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80",
+      "status": "available"
+    },
+    "status": 201,
+    "statusText": "201 Created",
+    "duration": "46 ms",
+    "responseBody": {
+      "status": "success",
+      "message": "Crop created successfully",
+      "data": {
+        "crop": {
+          "id": "19daef29-61ed-4c8c-a668-aa6cc49fc258",
+          "farmerId": "2841dafb-6f42-461c-95a9-e170d5609845",
+          "name": "Fresh Organic Hibiscus (Zobo)",
+          "price": 25.5,
+          "category": "Medicinal",
+          "quantity": 120,
+          "unit": "kg",
+          "description": "Sun-dried high-grade organic hibiscus calyces, rich in antioxidants.",
+          "imageUrl": "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80",
+          "status": "available",
+          "harvestDate": null,
+          "updatedAt": "2026-09-26T00:19:53.362Z",
+          "createdAt": "2026-09-26T00:19:53.362Z"
+        }
+      }
+    }
+  },
+  "updateCrop": {
+    "method": "PUT",
+    "url": "http://localhost:3000/api/crops/19daef29-61ed-4c8c-a668-aa6cc49fc258",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4NDFkYWZiLTZmNDItNDYxYy05NWE5LWUxNzBkNTYwOTg0NSIsImVtYWlsIjoiZmFybWVyX3Bvc3RtYW5fMTc5MDM4MTk5Mjc5NkBhZ3JpbWVkLmNvbSIsInJvbGUiOiJmYXJtZXIiLCJpYXQiOjE3OTAzODE5OTMsImV4cCI6MTc5MDM4Mjg5M30.ynS7TMe6LvKM3g1Mr6Vxd5T0sGSxUa5cVIY9CaNXiGc"
+    },
+    "requestBody": {
+      "name": "Fresh Organic Hibiscus (Export Grade)",
+      "price": 28,
+      "quantity": 150,
+      "unit": "kg",
+      "description": "Sun-dried premium export-grade organic hibiscus calyces, freshly packaged and certified.",
+      "status": "available"
+    },
+    "status": 200,
+    "statusText": "200 OK",
+    "duration": "51 ms",
+    "responseBody": {
+      "status": "success",
+      "message": "Crop updated successfully",
+      "data": {
+        "crop": {
+          "id": "19daef29-61ed-4c8c-a668-aa6cc49fc258",
+          "name": "Fresh Organic Hibiscus (Export Grade)",
+          "category": "Medicinal",
+          "price": "28.00",
+          "quantity": "150.00",
+          "unit": "kg",
+          "description": "Sun-dried premium export-grade organic hibiscus calyces, freshly packaged and certified.",
+          "imageUrl": "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80",
+          "status": "available",
+          "harvestDate": null,
+          "createdAt": "2026-09-26T00:19:53.000Z",
+          "updatedAt": "2026-09-26T00:19:53.000Z",
+          "farmerId": "2841dafb-6f42-461c-95a9-e170d5609845",
+          "farmer": {
+            "id": "2841dafb-6f42-461c-95a9-e170d5609845",
+            "name": "Tunde Adebayo",
+            "email": "farmer_postman_1790381992796@agrimed.com",
+            "phone_number": null,
+            "rating": null
+          }
+        }
+      }
+    }
+  }
+}
