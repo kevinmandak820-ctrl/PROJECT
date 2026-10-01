@@ -17,6 +17,17 @@ app.use(express.urlencoded({ extended: true }));
 // Serve uploaded static files
 app.use('/uploads', express.static(path.join(__dirname, '../../../uploads')));
 
+// Root endpoint
+app.get('/', (req, res) => {
+    res.status(200).json({
+        name: 'AgriMed Link Backend API',
+        status: 'online',
+        version: '1.0.0',
+        healthCheck: '/api/health',
+        documentation: 'https://github.com/kevinmandak820-ctrl/PROJECT'
+    });
+});
+
 // Routing
 app.use('/api', routes);
 

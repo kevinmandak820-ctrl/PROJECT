@@ -1,18 +1,36 @@
 const { Sequelize } = require('sequelize');
 const config = require('../../config');
 
-const sequelize = new Sequelize(config.db.name, config.db.user, config.db.pass, {
-    host: config.db.host,
-    port: config.db.port,
-    dialect: 'mysql',
-    logging: false,
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
-});
+const dbUrl = process.env.MYSQL_URL || process.env.DATABASE_URL;
+
+const sequelize = dbUrl
+    ? new Sequelize(dbUrl, {
+        dialect: 'mysql',
+        logging: false,
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+        }
+    })
+    : new Sequelize(
+        process.env.MYSQLDATABASE || config.db.name,
+        process.env.MYSQLUSER || config.db.user,
+        process.env.MYSQLPASSWORD || process.env.DB_PASS || config.db.pass,
+        {
+            host: process.env.MYSQLHOST || process.env.DB_HOST || config.db.host,
+            port: process.env.MYSQLPORT || process.env.DB_PORT || config.db.port,
+            dialect: 'mysql',
+            logging: false,
+            pool: {
+                max: 5,
+                min: 0,
+                acquire: 30000,
+                idle: 10000
+            }
+        }
+    );
 
 // Initialize models
 const User = require('./models/user.model')(sequelize);

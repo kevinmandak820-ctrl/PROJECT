@@ -1,19 +1,21 @@
 {
-  "name": "my-project",
+  "name": "agrimed-link-platform",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "AgriMed Link - Digital Crop Networking & Botanical Telemedicine Platform",
+  "main": "Backend/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "start": "node Backend/index.js",
+    "dev": "npm run dev --prefix Backend",
+    "postinstall": "cd Backend && npm install"
   },
-  "keywords": [],
+  "keywords": [
+    "agrimed",
+    "telemedicine",
+    "agriculture",
+    "crops",
+    "api"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "express": "^5.2.1",
-    "mysql2": "^3.23.3",
-    "nodemon": "^3.1.14",
-    "sequelize": "^6.37.8"
-  }
+  "type": "commonjs"
 }
