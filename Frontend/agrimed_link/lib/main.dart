@@ -12,10 +12,14 @@ import 'services/offline_manager.dart';
 import 'services/localization_service.dart';
 import 'services/currency_service.dart';
 import 'services/app_localizations.dart';
+import 'services/api_service.dart';
 import 'models/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize backend server URL preferences
+  await ApiService.init();
 
   // Initialize localization and currency preferences
   await LocalizationService.instance.init();

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'crop_service.dart';
+import 'api_service.dart';
 
 class GeminiScannerService {
   GeminiScannerService._();
@@ -23,7 +24,7 @@ class GeminiScannerService {
     'gemini-3.8-flash',
   ];
 
-  static const String _backendUrl = 'http://localhost:3000/api/scan/diagnose';
+  static String get _backendUrl => '${ApiService.baseUrl}/scan/diagnose';
 
   /// Primary diagnosis method:
   /// Scans plant image, detects disease/pathology, extracts active compounds,

@@ -8,10 +8,83 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// - Automatically attaches the stored JWT access token
 /// - On 401: attempts a token refresh, then retries once
 class ApiService {
-  // Use localhost for Windows/macOS/Linux desktop & iOS Simulator.
-  // Change to http://10.0.2.2:3000/api for Android emulator.
-  static const String _baseUrl = 'http://localhost:3000/api';
+  // Configured default backend URL with Railway production / environment support
+  static const String defaultBaseUrl = String.fromEnvironment(
+    'BACKEND_URL',
+    defaultValue: 'https://project-production.up.railway.app/api',
+  );
+
+  static String _baseUrl = defaultBaseUrl;
   static String get baseUrl => _baseUrl;
+
+  static const String _keyBaseUrl = 'custom_backend_base_url';
+
+  /// Initialize and restore any custom backend URL saved on device
+  static Future<void> init() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getString(_keyBaseUrl);
+      if (saved != null && saved.trim().isNotEmpty) {
+        _baseUrl = saved.trim();
+      }
+    } catch (_) {}
+  }
+
+  /// Update and persist a custom backend server URL
+  static Future<void> setCustomBaseUrl(String url) async {
+    String cleanUrl = url.trim();
+    if (cleanUrl.endsWith('/')) {
+      cleanUrl = cleanUrl.substring(0, cleanUrl.length - 1);
+    }
+    if (!cleanUrl.endsWith('/api')) {
+      cleanUrl = '$cleanUrl/api';
+    }
+    _baseUrl = cleanUrl;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_keyBaseUrl, cleanUrl);
+    } catch (_) {}
+  }
+
+  /// Reset the server URL to the baked-in default
+  static Future<void> resetBaseUrl() async {
+    _baseUrl = defaultBaseUrl;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_keyBaseUrl);
+    } catch (_) {}
+  }
+
+  /// Extract server origin (scheme + host + port) for static assets like uploads
+  static String get serverOrigin {
+    try {
+      final uri = Uri.tryParse(_baseUrl);
+      if (uri != null && uri.hasScheme && uri.hasAuthority) {
+        return '${uri.scheme}://${uri.authority}';
+      }
+    } catch (_) {}
+    return 'https://project-production.up.railway.app';
+  }
+
+  /// Test connectivity to the backend health endpoint
+  static Future<bool> testConnection([String? testUrl]) async {
+    try {
+      String target = testUrl?.trim() ?? _baseUrl;
+      if (target.endsWith('/')) {
+        target = target.substring(0, target.length - 1);
+      }
+      final healthEndpoint = target.endsWith('/api')
+          ? '$target/health'
+          : (target.contains('/api/') ? target : '$target/api/health');
+
+      final response = await http
+          .get(Uri.parse(healthEndpoint))
+          .timeout(const Duration(seconds: 4));
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (_) {
+      return false;
+    }
+  }
 
   static const String _keyAccess = 'access_token';
   static const String _keyRefresh = 'refresh_token';

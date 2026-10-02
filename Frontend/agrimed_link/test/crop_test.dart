@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:agrimed_link/main.dart';
 import 'package:agrimed_link/models/crop_model.dart';
 import 'package:agrimed_link/services/crop_service.dart';
+import 'package:agrimed_link/services/api_service.dart';
 
 void main() {
   group('CropModel and CropService Unit Tests', () {
@@ -33,7 +34,7 @@ void main() {
       expect(crop.unit, 'bundle');
       expect(crop.farmerName, 'Farmer Giles');
       expect(crop.isNetworkImage, isTrue);
-      expect(crop.displayImageUrl, 'http://localhost:3000/uploads/crops/crop-12345.png');
+      expect(crop.displayImageUrl, '${ApiService.serverOrigin}/uploads/crops/crop-12345.png');
     });
 
     test('CropModel fallback image works for asset paths', () {

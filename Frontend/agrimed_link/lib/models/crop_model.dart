@@ -1,3 +1,5 @@
+import '../services/api_service.dart';
+
 class CropModel {
   final String id;
   final String? farmerId;
@@ -145,7 +147,7 @@ class CropModel {
     }
     if (imageUrl!.startsWith('/uploads/')) {
       // Backend static upload path
-      return 'http://localhost:3000$imageUrl';
+      return '${ApiService.serverOrigin}$imageUrl';
     }
     if (imageUrl!.startsWith('assets/')) {
       return imageUrl!;
