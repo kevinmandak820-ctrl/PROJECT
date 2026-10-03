@@ -81,15 +81,22 @@ async function bootstrap() {
         }
     }
 
-    // Start HTTP server
-    app.listen(config.port, () => {
-        console.log(`Server is running in environment: development`);
-        console.log(`Listening at http://localhost:${config.port}`);
-        console.log(`Health endpoint: http://localhost:${config.port}/api/health`);
+    // Start HTTP server (bind to 0.0.0.0 for containerized / cloud hosting)
+    const host = '0.0.0.0';
+    const port = config.port || 3000;
+    app.listen(port, host, () => {
+        console.log(`Server is running in environment: ${process.env.NODE_ENV || 'production'}`);
+        console.log(`Listening on http://${host}:${port}`);
+        console.log(`Health endpoint: http://${host}:${port}/api/health`);
     });
 }
 
 bootstrap().catch((err) => {
     console.error('Fatal initialization error:', err);
-    process.exit(1);
+    // Still start Express server so Railway healthcheck can report status instead of immediate hard container crash
+    const host = '0.0.0.0';
+    const port = config.port || 3000;
+    app.listen(port, host, () => {
+        console.warn(`Server started in recovery mode on http://${host}:${port}`);
+    });
 });

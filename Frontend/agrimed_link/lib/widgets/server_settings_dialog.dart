@@ -194,7 +194,7 @@ class _ServerSettingsDialogState extends State<ServerSettingsDialog> {
                     children: [
                       _buildPresetChip(
                         label: '🚀 Railway Cloud',
-                        url: 'https://project-production.up.railway.app/api',
+                        url: 'https://project-production-98f5.up.railway.app/api',
                       ),
                       _buildPresetChip(
                         label: '📱 Android (10.0.2.2)',
@@ -231,7 +231,7 @@ class _ServerSettingsDialogState extends State<ServerSettingsDialog> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.black.withOpacity(0.35),
-                      hintText: 'https://your-service.up.railway.app/api',
+                      hintText: 'https://project-production-98f5.up.railway.app/api',
                       hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
                       prefixIcon: const Icon(Icons.link, color: AppTheme.secondaryGreen),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),

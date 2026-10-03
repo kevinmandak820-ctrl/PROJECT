@@ -1,7 +1,10 @@
 const { Sequelize } = require('sequelize');
 const config = require('../../config');
 
-const dbUrl = process.env.MYSQL_URL || process.env.DATABASE_URL;
+const dbUrl = process.env.MYSQL_URL || 
+              process.env.MYSQL_PRIVATE_URL || 
+              process.env.DATABASE_URL || 
+              process.env.DATABASE_PRIVATE_URL;
 
 const sequelize = dbUrl
     ? new Sequelize(dbUrl, {

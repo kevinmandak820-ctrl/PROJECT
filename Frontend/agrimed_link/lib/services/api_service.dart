@@ -11,7 +11,7 @@ class ApiService {
   // Configured default backend URL with Railway production / environment support
   static const String defaultBaseUrl = String.fromEnvironment(
     'BACKEND_URL',
-    defaultValue: 'https://project-production.up.railway.app/api',
+    defaultValue: 'https://project-production-98f5.up.railway.app/api',
   );
 
   static String _baseUrl = defaultBaseUrl;
@@ -63,7 +63,7 @@ class ApiService {
         return '${uri.scheme}://${uri.authority}';
       }
     } catch (_) {}
-    return 'https://project-production.up.railway.app';
+    return 'https://project-production-98f5.up.railway.app';
   }
 
   /// Test connectivity to the backend health endpoint
