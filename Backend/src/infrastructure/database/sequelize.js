@@ -106,18 +106,35 @@ User.hasMany(PrivateMessage, { as: 'receivedPrivateMessages', foreignKey: 'recip
 PrivateMessage.belongsTo(User, { as: 'sender', foreignKey: 'senderId' });
 PrivateMessage.belongsTo(User, { as: 'recipient', foreignKey: 'recipientId' });
 
-async function testConnection() {
+let dbStatus = {
+    connected: false,
+    message: 'Database initializing...',
+    lastChecked: null
+};
+
+async function testConnection(timeoutMs = 4000) {
     try {
-        await sequelize.authenticate();
-        return { connected: true, message: 'Database connection established successfully.' };
+        const authPromise = sequelize.authenticate();
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Connection timed out')), timeoutMs)
+        );
+        await Promise.race([authPromise, timeoutPromise]);
+        dbStatus = { connected: true, message: 'Database connection established successfully.', lastChecked: new Date() };
+        return dbStatus;
     } catch (error) {
-        return { connected: false, message: `Database connection failed (MySQL server might not be running yet): ${error.message}` };
+        dbStatus = { connected: false, message: `Database offline: ${error.message}`, lastChecked: new Date() };
+        return dbStatus;
     }
+}
+
+function getDbStatus() {
+    return dbStatus;
 }
 
 module.exports = {
     sequelize,
     testConnection,
+    getDbStatus,
     User,
     AgriculturalProduct,
     IndustrialProduct,

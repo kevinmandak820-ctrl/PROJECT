@@ -2,11 +2,32 @@ const app = require('./src/interfaces/http/app');
 const config = require('./src/config');
 const { sequelize, testConnection } = require('./src/infrastructure/database/sequelize');
 
-async function bootstrap() {
-    console.log('Bootstrapping backend service...');
+const host = '0.0.0.0';
+const primaryPort = parseInt(process.env.PORT || config.port || 3000, 10);
 
-    // Test database connection on startup
-    const dbHealth = await testConnection();
+// 1. Immediately bind and start HTTP server so Railway healthchecks pass in <100ms
+const server = app.listen(primaryPort, host, () => {
+    console.log(`Server is running in environment: ${process.env.NODE_ENV || 'production'}`);
+    console.log(`Listening on http://${host}:${primaryPort}`);
+    console.log(`Health endpoint: http://${host}:${primaryPort}/api/health`);
+});
+
+// Also bind secondary port 8080 if primary is different to guarantee ingress routing
+if (primaryPort !== 8080) {
+    try {
+        const secondary = app.listen(8080, host, () => {
+            console.log(`Auxiliary ingress port listening on http://${host}:8080`);
+        });
+        secondary.on('error', () => { /* ignore if port 8080 is unavailable */ });
+    } catch (_) {}
+}
+
+// 2. Initialize database asynchronously in the background
+async function bootstrapDatabase() {
+    console.log('Bootstrapping backend database in background...');
+
+    // Test database connection with 4s timeout
+    const dbHealth = await testConnection(4000);
     console.log(dbHealth.message);
 
     if (dbHealth.connected) {
@@ -77,26 +98,13 @@ async function bootstrap() {
             const { seedChatAndCommunities } = require('./src/infrastructure/database/seed_chat');
             await seedChatAndCommunities();
         } catch (syncError) {
-            console.error('Failed to sync database models:', syncError);
+            console.error('Failed to sync database models:', syncError.message);
         }
+    } else {
+        console.warn('Backend server running in API-ready standalone mode. Attach Railway MySQL to persist live data.');
     }
-
-    // Start HTTP server (bind to 0.0.0.0 for containerized / cloud hosting)
-    const host = '0.0.0.0';
-    const port = config.port || 3000;
-    app.listen(port, host, () => {
-        console.log(`Server is running in environment: ${process.env.NODE_ENV || 'production'}`);
-        console.log(`Listening on http://${host}:${port}`);
-        console.log(`Health endpoint: http://${host}:${port}/api/health`);
-    });
 }
 
-bootstrap().catch((err) => {
-    console.error('Fatal initialization error:', err);
-    // Still start Express server so Railway healthcheck can report status instead of immediate hard container crash
-    const host = '0.0.0.0';
-    const port = config.port || 3000;
-    app.listen(port, host, () => {
-        console.warn(`Server started in recovery mode on http://${host}:${port}`);
-    });
+bootstrapDatabase().catch((err) => {
+    console.error('Background DB bootstrap notice:', err.message);
 });
